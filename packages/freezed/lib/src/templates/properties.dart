@@ -20,6 +20,7 @@ class Property {
     required this.doc,
     required this.isSynthetic,
     required this.isFinal,
+    required this.isLate,
   });
 
   Property.fromParameter(Parameter p, {required bool isSynthetic})
@@ -33,6 +34,7 @@ class Property {
           defaultValueSource: p.defaultValueSource,
           isSynthetic: isSynthetic,
           hasJsonKey: false,
+          isLate: false,
         );
 
   static Property fromFormalParameter(
@@ -61,6 +63,7 @@ class Property {
       decorators: parseDecorators(element.metadata),
       defaultValueSource: defaultValue,
       hasJsonKey: element.hasJsonKey,
+      isLate: false,
     );
   }
 
@@ -68,6 +71,7 @@ class Property {
   final String typeDisplayString;
   final String name;
   final bool isFinal;
+  final bool isLate;
   final bool isSynthetic;
   final List<String> decorators;
   final String? defaultValueSource;
@@ -115,6 +119,7 @@ class Property {
     String? doc,
     bool? isPossiblyDartCollection,
     ParameterElement? parameterElement,
+    bool? isLate,
   }) {
     return Property(
       type: type ?? this.type,
@@ -126,6 +131,7 @@ class Property {
       hasJsonKey: hasJsonKey ?? this.hasJsonKey,
       doc: doc ?? this.doc,
       isFinal: isFinal ?? this.isFinal,
+      isLate: isLate ?? this.isLate,
     );
   }
 }
