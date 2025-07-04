@@ -795,6 +795,7 @@ To fix, either:
               TypeAnnotation? type,
               String? doc,
               bool isFinal,
+              bool isLate,
               bool isSynthetic,
               List<String> decorators,
             })?
@@ -806,6 +807,7 @@ To fix, either:
       required int index,
       required String? doc,
       required bool isFinal,
+      required bool isLate,
       required bool isSynthetic,
       required List<String> decorators,
     }) {
@@ -817,6 +819,7 @@ To fix, either:
         type: type,
         doc: doc,
         isFinal: isFinal,
+        isLate: isLate,
         isSynthetic: isSynthetic,
         decorators: decorators,
       );
@@ -831,6 +834,7 @@ To fix, either:
         index: 0,
         doc: property.$1.documentation,
         isFinal: property.$1.fields.isFinal,
+        isLate: property.$1.fields.isLate,
         isSynthetic: false,
         decorators: parseDecorators(
           property.$1.declaredFragment?.element.metadata.annotations ?? [],
@@ -855,6 +859,7 @@ To fix, either:
           isSynthetic: true,
           doc: parameter.documentation,
           isFinal: freezedParameter.isFinal,
+          isLate: false,
           decorators: freezedParameter.decorators,
         );
       }
@@ -873,6 +878,7 @@ To fix, either:
       late String typeString;
       String? doc;
       late bool isFinal;
+      late bool isLate;
       late DartType type;
       late List<String> decorators;
       late bool isSynthetic;
@@ -887,6 +893,7 @@ To fix, either:
           typeString = fieldType.type?.toSource() ?? type.toString();
           doc = fieldType.doc;
           isFinal = fieldType.isFinal;
+          isLate = fieldType.isLate;
           decorators = fieldType.decorators;
           isSynthetic = fieldType.isSynthetic;
         case [...]:
@@ -907,6 +914,7 @@ To fix, either:
             // and we can paste the type in the generated source directly.
             typeString = typeSources.single ?? type.toString();
             isFinal = fields.any((e) => e!.isFinal);
+            isLate = fields.any((e) => e!.isLate);
 
             break;
           }
@@ -915,6 +923,7 @@ To fix, either:
               .map((e) => e!.type?.type ?? typeProvider.dynamicType)
               .reduce((a, b) => typeSystem.leastUpperBound(a, b));
           isFinal = true;
+          isLate = fields.any((e) => e!.isLate);
 
           typeString = resolveFullTypeStringFrom(
             declaration.declaredFragment!.element.library,
@@ -927,6 +936,7 @@ To fix, either:
         type: type,
         typeDisplayString: typeString,
         isFinal: isFinal,
+        isLate: isLate,
         isSynthetic: isSynthetic,
         decorators: decorators,
         defaultValueSource: null,
@@ -1026,6 +1036,7 @@ To fix, either:
         doc: parameter.doc,
         hasJsonKey: false,
         isSynthetic: true,
+        isLate: false,
       );
 
       if (isSynthetic) result.readableProperties.add(commonProperty);
@@ -1051,6 +1062,7 @@ To fix, either:
             defaultValueSource: parameter.defaultValueSource,
             doc: parameter.doc,
             hasJsonKey: false,
+            isLate: false,
           ),
         );
       }

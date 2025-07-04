@@ -20,20 +20,22 @@ class Property {
     required this.doc,
     required this.isSynthetic,
     required this.isFinal,
+    required this.isLate,
   });
 
   Property.fromParameter(Parameter p, {required bool isSynthetic})
-    : this(
-        decorators: p.decorators,
-        name: p.name,
-        isFinal: p.isFinal,
-        doc: p.doc,
-        type: p.type,
-        typeDisplayString: p.typeDisplayString,
-        defaultValueSource: p.defaultValueSource,
-        isSynthetic: isSynthetic,
-        hasJsonKey: false,
-      );
+      : this(
+          decorators: p.decorators,
+          name: p.name,
+          isFinal: p.isFinal,
+          doc: p.doc,
+          type: p.type,
+          typeDisplayString: p.typeDisplayString,
+          defaultValueSource: p.defaultValueSource,
+          isSynthetic: isSynthetic,
+          hasJsonKey: false,
+          isLate: false,
+        );
 
   static Property fromFormalParameter(
     FormalParameter parameter, {
@@ -61,6 +63,7 @@ class Property {
       decorators: parseDecorators(element.metadata.annotations),
       defaultValueSource: defaultValue,
       hasJsonKey: element.hasJsonKey,
+      isLate: false,
     );
   }
 
@@ -68,6 +71,7 @@ class Property {
   final String typeDisplayString;
   final String name;
   final bool isFinal;
+  final bool isLate;
   final bool isSynthetic;
   final List<String> decorators;
   final String? defaultValueSource;
@@ -81,28 +85,28 @@ class Property {
   }
 
   Getter get abstractGetter => Getter(
-    name: name,
-    type: typeDisplayString,
-    decorators: decorators,
-    doc: doc,
-    body: ';',
-  );
+        name: name,
+        type: typeDisplayString,
+        decorators: decorators,
+        doc: doc,
+        body: ';',
+      );
 
   Getter asGetter(String body) => Getter(
-    name: name,
-    type: typeDisplayString,
-    decorators: decorators,
-    doc: doc,
-    body: body,
-  );
+        name: name,
+        type: typeDisplayString,
+        decorators: decorators,
+        doc: doc,
+        body: body,
+      );
 
   Setter get abstractSetter => Setter(
-    name: name,
-    type: typeDisplayString,
-    decorators: decorators,
-    doc: doc,
-    body: ';',
-  );
+        name: name,
+        type: typeDisplayString,
+        decorators: decorators,
+        doc: doc,
+        body: ';',
+      );
 
   Property copyWith({
     DartType? type,
@@ -115,6 +119,7 @@ class Property {
     String? doc,
     bool? isPossiblyDartCollection,
     TypeParameterElement? parameterElement,
+    bool? isLate,
   }) {
     return Property(
       type: type ?? this.type,
@@ -126,6 +131,7 @@ class Property {
       hasJsonKey: hasJsonKey ?? this.hasJsonKey,
       doc: doc ?? this.doc,
       isFinal: isFinal ?? this.isFinal,
+      isLate: isLate ?? this.isLate,
     );
   }
 }
