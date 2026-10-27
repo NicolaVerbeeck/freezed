@@ -317,6 +317,12 @@ Future<void> main() async {
     expect(value.toString(), 'AllProperties(value: 42)');
   });
 
+  test('copyWith of a single named factory next to a ._() constructor', () {
+    const NamedWithPrivate value = NamedWithPrivate.named(1);
+
+    expect(value.copyWith(value: 2), const NamedWithPrivate.named(2));
+  });
+
   test('== and hashCode do not read late final fields', () {
     var callCount = 0;
     int? cb() {

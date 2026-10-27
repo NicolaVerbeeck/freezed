@@ -642,9 +642,17 @@ class Class {
 
     final copyWithEnabled =
         (configs.annotation.copyWith ?? globalConfigs.copyWith ?? true);
-    final copyWithTarget = (copyWithEnabled && constructors.length <= 1)
-        ? declaration.copyWithTarget
-        : null;
+    final copyWithTarget = !copyWithEnabled
+        ? null
+        : switch (constructors) {
+            [] => declaration.copyWithTarget,
+            // The single Freezed constructor itself: `declaration.copyWithTarget`
+            // would prefer a `MyClass._()` helper next to a named factory.
+            [final single] => declaration.allConstructors.firstWhereOrNull(
+              (e) => (e.constructorNamePart ?? '') == single.name,
+            ),
+            _ => null,
+          };
 
     // Fieldless primary classes have no callable copyWith to validate.
     if (copyWithTarget != null &&

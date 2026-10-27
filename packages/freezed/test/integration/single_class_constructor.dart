@@ -462,6 +462,12 @@ abstract class Late2 with _$Late2 {
   late final int? first = cb();
 }
 
+@freezed
+sealed class NamedWithPrivate with _$NamedWithPrivate {
+  const NamedWithPrivate._();
+  const factory NamedWithPrivate.named(int value) = NamedWithPrivateNamed;
+}
+
 /// Not generated: inherits `_$Late2`'s `==` and `hashCode`, which must not
 /// read the late `first` (that would run `cb`).
 class InheritedLate2 extends Late2 {
