@@ -317,6 +317,21 @@ Future<void> main() async {
     expect(value.toString(), 'AllProperties(value: 42)');
   });
 
+  test('== and hashCode do not read late final fields', () {
+    var callCount = 0;
+    int? cb() {
+      callCount++;
+      return null;
+    }
+
+    final a = InheritedLate2(cb);
+    final b = InheritedLate2(cb);
+
+    expect(a == b, isTrue);
+    expect(a.hashCode, b.hashCode);
+    expect(callCount, 0);
+  });
+
   test('late can return null and still be called only once', () {
     int callCount = 0;
     final value = Late2(() {

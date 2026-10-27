@@ -462,6 +462,15 @@ abstract class Late2 with _$Late2 {
   late final int? first = cb();
 }
 
+/// Not generated: inherits `_$Late2`'s `==` and `hashCode`, which must not
+/// read the late `first` (that would run `cb`).
+class InheritedLate2 extends Late2 {
+  InheritedLate2(this.cb) : super._();
+
+  @override
+  final int? Function() cb;
+}
+
 @freezed
 abstract class ComplexLate with _$ComplexLate {
   ComplexLate._();
