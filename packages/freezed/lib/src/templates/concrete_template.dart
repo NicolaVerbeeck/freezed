@@ -453,7 +453,7 @@ String operatorEqualMethod(
     'other.runtimeType == runtimeType',
     'other is $className${data.genericsParameterTemplate}',
     if (data.hasSuperEqual) 'super == other',
-    ...properties.map((p) {
+    ...properties.whereNot((p) => p.isLate && p.isFinal).map((p) {
       var name = p.name;
 
       if (data.options.asUnmodifiableCollections &&
@@ -502,7 +502,7 @@ String hashCodeMethod(
   final hashedProperties = [
     'runtimeType',
     if (data.hasSuperHashCode) 'super.hashCode',
-    for (final property in properties)
+    for (final property in properties.whereNot((p) => p.isLate && p.isFinal))
       if (property.type.isPossiblyDartCollection)
         if (data.options.asUnmodifiableCollections &&
             source == Source.syntheticClass &&
